@@ -8,13 +8,15 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      home: "",
+      drinksMenu: [],
     };
   }
 
   componentDidMount = () => {
-    const url = process.env.REACT_APP_SERVER_URL;
-    axios.get(url).then((homeRec) => this.setState({ home: homeRec.data }));
+    axios
+      .get(`${process.env.REACT_APP_SERVER_URL}/drinksMenu?a=Non_Alcoholic`)
+      .then((drinksData) => this.setState({ drinksMenu: drinksData.data }))
+      .catch((error) => console.log(error));
   };
 
   render() {
@@ -23,16 +25,14 @@ class App extends Component {
         <NavBar />
         <Router>
           <Switch>
-            <Route path="/Home">
-              <Home />
-            </Route>
             <Route path="/Favorite">
               <Favorite />
             </Route>
+            <Route path="/">
+              <Home drinksMenu={this.state.drinksMenu} />
+            </Route>
           </Switch>
         </Router>
-
-        <h1>{this.state.home}</h1>
       </div>
     );
   }
