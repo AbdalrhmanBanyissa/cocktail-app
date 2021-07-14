@@ -1,13 +1,40 @@
-import React, { Component } from 'react';
-
+import axios from "axios";
+import React, { Component } from "react";
+import { Button, Card } from "react-bootstrap";
 class Favorite extends Component {
-    render() {
-        return (
-            <div>
-                <h1>hello from favorite</h1>
+  constructor(props) {
+    super(props);
+    this.state = {
+      favoriteMenu: [],
+    };
+  }
+
+  componentDidMount = () => {
+    const url = `${process.env.REACT_APP_SERVER_URL}/getFromDrinksMenu`;
+    axios
+      .get(url)
+      .then((drinksData) => this.setState({ favoriteMenu: drinksData.data }))
+      .catch((error) => console.log(error));
+  };
+
+  render() {
+    return (
+      <div className="home">
+        {this.state.favoriteMenu.map((item, key) => {
+          return (
+            <div className="card" key={key}>
+              <Card style={{ width: "18rem" }}>
+                <Card.Img variant="top" src={item.img} />
+                <Card.Body>
+                  <Card.Title>{item.drink}</Card.Title>
+                </Card.Body>
+              </Card>
             </div>
-        );
-    }
+          );
+        })}
+      </div>
+    );
+  }
 }
 
 export default Favorite;
