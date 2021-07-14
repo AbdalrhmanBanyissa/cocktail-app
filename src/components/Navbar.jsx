@@ -11,7 +11,7 @@ class NavBar extends Component {
             <Nav className="me-auto">
               <Nav.Link href="/Home">Home</Nav.Link>
               <Nav.Link href="/Favorite">Favorite</Nav.Link>
-             </Nav>
+            </Nav>
           </Container>
         </Navbar>
       </div>
