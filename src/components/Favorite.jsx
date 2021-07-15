@@ -27,6 +27,8 @@ class Favorite extends Component {
                 <Card.Img variant="top" src={item.img} />
                 <Card.Body>
                   <Card.Title>{item.drink}</Card.Title>
+                  <Button onClick={()=>this.handleDelete(item._id)} variant="outline-danger" className="m-2">delete</Button>
+                <Button variant="outline-secondary">update</Button>
                 </Card.Body>
               </Card>
             </div>
@@ -34,6 +36,14 @@ class Favorite extends Component {
         })}
       </div>
     );
+  }
+  handleDelete = (id) => {
+    console.log(id);
+    const url = `${process.env.REACT_APP_SERVER_URL}/deleteFromDrinksMenu/${id}`
+    axios
+    .delete(url)
+    .then((results)=>this.setState({favoriteMenu:results.data}))
+    .catch((error)=>console.log(error))
   }
 }
 
