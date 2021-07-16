@@ -1,13 +1,30 @@
 import axios from "axios";
 import React, { Component } from "react";
 import { Button, Card } from "react-bootstrap";
+import UpdateForm from "./UpdateForm";
 class Favorite extends Component {
   constructor(props) {
     super(props);
     this.state = {
       favoriteMenu: [],
+      show: false,
+      drinkName: "",
+      drinkImg: "",
+      drinkID: 0,
     };
   }
+
+  handleClose = () => {
+    this.setState({ show: false });
+  };
+  handleShow = (obj) => {
+    this.setState({
+      show: true,
+      drinkName: obj.drink,
+      drinkImg: obj.img,
+      drinkID: obj._id,
+    });
+  };
 
   componentDidMount = () => {
     const url = `${process.env.REACT_APP_SERVER_URL}/getFromDrinksMenu`;
@@ -27,8 +44,26 @@ class Favorite extends Component {
                 <Card.Img variant="top" src={item.img} />
                 <Card.Body>
                   <Card.Title>{item.drink}</Card.Title>
-                  <Button onClick={()=>this.handleDelete(item._id)} variant="outline-danger" className="m-2">delete</Button>
-                <Button variant="outline-secondary">update</Button>
+                  <Button
+                    onClick={() => this.handleDelete(item._id)}
+                    variant="outline-danger"
+                    className="m-2"
+                  >
+                    delete
+                  </Button>
+                  <Button
+                    onClick={() => this.handleShow(item)}
+                    variant="outline-secondary"
+                  >
+                    update
+                  </Button>
+                  <UpdateForm
+                    show={this.state.show}
+                    handleClose={this.handleClose}
+                    handleSubmite={this.handleSubmite}
+                    handleChangeDrinkName={this.handleChangeDrinkName}
+                    handleChangeDrinkImg={this.handleChangeDrinkImg}
+                  />
                 </Card.Body>
               </Card>
             </div>
@@ -38,13 +73,31 @@ class Favorite extends Component {
     );
   }
   handleDelete = (id) => {
-    console.log(id);
-    const url = `${process.env.REACT_APP_SERVER_URL}/deleteFromDrinksMenu/${id}`
+    const url = `${process.env.REACT_APP_SERVER_URL}/deleteFromDrinksMenu/${id}`;
     axios
-    .delete(url)
-    .then((results)=>this.setState({favoriteMenu:results.data}))
+      .delete(url)
+      .then((results) => this.setState({ favoriteMenu: results.data }))
+      .catch((error) => console.log(error));
+  };
+  handleSubmite = (event) => {
+    event.preventDefault();
+    const url = `${process.env.REACT_APP_SERVER_URL}/updateDrinksMenu`
+    const obj = {
+      drink:this.state.drinkName,
+      img:this.state.drinkImg,
+      id:this.state.drinkID
+    }
+    axios
+    .put(url,obj)
+    .then((drinksData)=>this.setState({favoriteMenu:drinksData.data}))
     .catch((error)=>console.log(error))
-  }
+  };
+  handleChangeDrinkName = (event) => {
+    this.setState({ drinkName: event.target.value });
+  };
+  handleChangeDrinkImg = (event) => {
+    this.setState({ drinkImg: event.target.value });
+  };
 }
 
 export default Favorite;

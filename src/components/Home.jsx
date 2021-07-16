@@ -14,7 +14,7 @@ class Home extends Component {
                 <Card.Img variant="top" src={item.img} />
                 <Card.Body>
                   <Card.Title>{item.drink}</Card.Title>
-                  <Button onClick={()=>this.handleAdd(item)} variant="primary">Add to Favorite</Button>
+                  <Button onClick={()=>this.handleAdd(item)} variant="outline-primary">Add to Favorite</Button>
                 </Card.Body>
               </Card>
             </div>
@@ -24,7 +24,6 @@ class Home extends Component {
     );
   }
   handleAdd = (obj) => {
-    console.log(obj);
     const url = `${process.env.REACT_APP_SERVER_URL}/addToDrinksMenu`;
     axios
     .post(url,obj)
